@@ -21,8 +21,6 @@ Make sure that LaMini-Flan-T5-248M is in the same directory as the cloned projec
 ## Running
 Now to run the app , run the below code
 ```
-streamlit run app.py
+streamlit run app_4.py
 ```
-Upload a pdf file and see the summarization :)
-![pdf](https://github.com/hith3sh/PDFInsight/assets/83839061/1254f408-e0be-4723-a2b4-85c02267b272)
-![summary](https://github.com/hith3sh/PDFInsight/assets/83839061/b0a856dd-2e42-493c-a2d6-2cf293c9f40a)
+
