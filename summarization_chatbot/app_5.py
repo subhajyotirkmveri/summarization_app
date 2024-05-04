@@ -8,13 +8,12 @@ from PIL import Image
 import PyPDF2
 import re
 
-
 # Model and tokenizer loading
 checkpoint = "LaMini-Flan-T5-248M"
 tokenizer = T5Tokenizer.from_pretrained(checkpoint)
 base_model = T5ForConditionalGeneration.from_pretrained(checkpoint, device_map='auto', torch_dtype=torch.float32)
 
-#Function to Read .txt File and return its Text
+# Function to Read .txt File and return its Text
 def file_text(filepath):
     with open(filepath) as f:
         text = f.read().replace("\n", '')
@@ -59,33 +58,18 @@ def wiki_text(url):
     for p in paragraphs:
         article_text += p.text
     
-    #Removing all unwanted characters
+    # Removing all unwanted characters
     article_text = re.sub(r'\[[0-9]*\]', '', article_text)
     return article_text
 
 # LLM pipeline- using summarization pipeline
-def llm_pipeline(text):
-
+def llm_pipeline(text, min_tokens=25, max_tokens=None):
     pipe_sum = pipeline(
         'summarization',
         model=base_model,
         tokenizer=tokenizer,
-        max_length=len(text)//8,
-        min_length=25)
-    result = pipe_sum(text)
-    result = result[0]['summary_text']
-    return result
-
-
-
-# LLM pipeline
-def llm_pipeline_wiki(text):
-    pipe_sum = pipeline(
-        'summarization',
-        model=base_model,
-        tokenizer=tokenizer,
-        max_length=500,
-        min_length=50)
+        max_length=max_tokens or len(text)//8,
+        min_length=min_tokens)
     result = pipe_sum(text)
     result = result[0]['summary_text']
     return result
@@ -110,6 +94,9 @@ def main():
 
     choice = st.sidebar.selectbox("Select your choice", ["Type your Text (or Copy-Paste)", "Load from .txt file", "Load from .pdf file", "From Wikipedia Page URL"])
 
+    min_tokens = st.sidebar.number_input("Minimum Tokens for Summary", min_value=1, value=25)
+    max_tokens = st.sidebar.number_input("Maximum Tokens for Summary", min_value=1, value=None)
+
     if choice ==  "Type your Text (or Copy-Paste)":
         st.subheader("Summarize Text")
         input_text = st.text_area("Enter your text here")
@@ -121,7 +108,7 @@ def main():
                     st.info(input_text)
                 with col2:
                     st.markdown("**Summary Result**")
-                    result = llm_pipeline(input_text)
+                    result = llm_pipeline(input_text, min_tokens, max_tokens)
                     st.success(result)
                     
     elif choice == "Load from .txt file":
@@ -143,33 +130,36 @@ def main():
                         st.text_area("Text File Contents", value=file_contents, height=400)
 
                 with col2:
-                    #summary = llm_pipeline_txt(filepath)
                     input_text, input_length = file_text(filepath)                
-                    summary = llm_pipeline(input_text)
+                    summary = llm_pipeline(input_text, min_tokens, max_tokens)
                     st.info("Summarization")
                     st.success(summary)                   
-         
-
-
+      
                 
     elif choice == "Load from .pdf file":
         st.subheader("Summarize Document")
         uploaded_file = st.file_uploader("Upload your document here", type=['pdf'])
 
-        if uploaded_file is not None:
+        #if uploaded_file is not None:
+        if uploaded_file:
+            filepath = "uploaded_pdfs/" + uploaded_file.name
+            with open(filepath, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            st.success("PDF file uploaded successfully!")
+            
             if st.button("Summarize Document"):
                 col1, col2 = st.columns([1, 1])
-                filepath = "uploaded_pdfs/" + uploaded_file.name
+                #filepath = "uploaded_pdfs/" + uploaded_file.name
 
 
                 with col1:
                     st.info("Display document")
                     pdf_view = displayPDF(filepath)
-                    st.info("go to terminal for choosing the number of pages whose summarization you wanted to see")
+                    st.info("Navigate to the terminal to select the number of pages you'd like to summarize")
 
                 with col2:
                     input_text, input_length = pdf_file_preprocessing(filepath)                
-                    summary = llm_pipeline(input_text)
+                    summary = llm_pipeline(input_text, min_tokens, max_tokens)
                     st.info("Summarization")
                     st.success(summary)                    
                     
@@ -194,7 +184,7 @@ def main():
         with col2:
             if wiki_URL:
                 if st.button("Summarize"):
-                    summary = llm_pipeline_wiki(wiki_text(wiki_URL))
+                    summary = llm_pipeline(wiki_text(wiki_URL), min_tokens, max_tokens)
                     st.success(summary)
 
 # Initializing the app

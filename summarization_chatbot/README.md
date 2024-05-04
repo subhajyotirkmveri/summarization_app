@@ -21,6 +21,6 @@ Make sure that LaMini-Flan-T5-248M is in the same directory as the cloned projec
 ## Running
 Now to run the app , run the below code
 ```
-streamlit run app_4.py
+streamlit run app_5.py
 ```
 
