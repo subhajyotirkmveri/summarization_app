@@ -42,13 +42,13 @@ streamlit run app_5.py
 
 You can read the text of your long article in 4 ways :-
 
-![InputTextWays](https://user-images.githubusercontent.com/56812557/212475484-5bd0addf-1b14-4820-b4e2-b21565de8b71.png)
+![InputTextWays]
 
   - By typing text on your own (or copy-paste).
   - Reading the text from **.txt file**.
   - Reading the text from **.pdf file**.(You can choose either to get summary of entire pdf or select any page interval).
   
-  ![PdfInput](https://user-images.githubusercontent.com/56812557/212475479-d012f433-8ebd-4283-9c18-c1ebf552accf.png)
+  ![PdfInput]
 
   - Reading the text from **wikipedia page** (All you have to do is to provide the url of that page. Program will automatically scrap the text and summarise it for you).
   
@@ -56,7 +56,7 @@ You can read the text of your long article in 4 ways :-
  
 ## Output :- 
  
-   - This is some of the summary text return by the program. Main article was loaded by Wikipedia Page Url -> https://en.wikipedia.org/wiki/Artificial_intelligence
+   - This is some of the summary text return by the program. Main article was loaded by Wikipedia Page Url -> 
    
    ![Summary]
    
