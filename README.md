@@ -58,9 +58,9 @@ You can read the text of your long article in 4 ways :-
  
    - This is some of the summary text return by the program. Main article was loaded by Wikipedia Page Url -> https://en.wikipedia.org/wiki/Artificial_intelligence
    
-   ![Summary](https://user-images.githubusercontent.com/56812557/212475483-5fe99afd-5016-428e-877d-e1e0b9406786.png)
+   ![Summary]
    
    - Comparison of Original Content vs Summarized content.
    
-   ![OriginalvsSummaryWordCount](https://user-images.githubusercontent.com/56812557/212475485-d06beadf-1805-49e2-a906-a2745d06b832.png)
+   ![OriginalvsSummaryWordCount]
    
