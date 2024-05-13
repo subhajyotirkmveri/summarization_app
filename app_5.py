@@ -7,7 +7,7 @@ import base64
 from PIL import Image
 import PyPDF2
 import re
-
+import os
 # Model and tokenizer loading
 checkpoint = "LaMini-Flan-T5-248M"
 tokenizer = T5Tokenizer.from_pretrained(checkpoint)
@@ -95,7 +95,9 @@ def main():
     choice = st.sidebar.selectbox("Select your choice", ["Type your Text (or Copy-Paste)", "Load from .txt file", "Load from .pdf file", "From Wikipedia Page URL"])
 
     min_tokens = st.sidebar.number_input("Minimum Tokens for Summary", min_value=1, value=25)
-    max_tokens = st.sidebar.number_input("Maximum Tokens for Summary", min_value=1, value=None)
+    #max_tokens = st.sidebar.number_input("Maximum Tokens for Summary", min_value=1, value=None)
+    max_tokens = st.sidebar.number_input("Maximum Tokens for Summary", min_value=1, value=1000)
+
 
     if choice ==  "Type your Text (or Copy-Paste)":
         st.subheader("Summarize Text")
@@ -118,6 +120,12 @@ def main():
         if uploaded_file is not None:
             if st.button("Summarize text Document"):
                 col1, col2 = st.columns([1, 1])
+                if not os.path.exists("uploaded_txts/"):
+                    os.makedirs("uploaded_txts/")
+                    print(" uploaded_txts Folder created successfully")
+                else:
+                    print("uploaded_txts Folder already exists")
+                    
                 filepath = "uploaded_txts/" + uploaded_file.name
 
                 with open(filepath, "wb") as temp_file:
@@ -133,7 +141,19 @@ def main():
                     input_text, input_length = file_text(filepath)                
                     summary = llm_pipeline(input_text, min_tokens, max_tokens)
                     st.info("Summarization")
-                    st.success(summary)                   
+                    st.success(summary) 
+                    
+            # Option to delete all uploaded txt files 
+            if st.button("Delete Uploaded Files"):
+
+                folder = "uploaded_txts/"
+                for filename in os.listdir(folder):
+                    file_path = os.path.join(folder, filename)
+                    try:
+                        if os.path.isfile(file_path):
+                            os.unlink(file_path)
+                    except Exception as e:
+                        st.error(f"Error: {e}")                  
       
                 
     elif choice == "Load from .pdf file":
@@ -142,6 +162,12 @@ def main():
 
         #if uploaded_file is not None:
         if uploaded_file:
+            if not os.path.exists("uploaded_pdfs/"):
+                os.makedirs("uploaded_pdfs/")
+                print("uploaded_pdfs Folder created successfully")
+            else:
+                print("uploaded_pdfs Folder already exists")   
+                      
             filepath = "uploaded_pdfs/" + uploaded_file.name
             with open(filepath, "wb") as f:
                 f.write(uploaded_file.getbuffer())
@@ -161,7 +187,19 @@ def main():
                     input_text, input_length = pdf_file_preprocessing(filepath)                
                     summary = llm_pipeline(input_text, min_tokens, max_tokens)
                     st.info("Summarization")
-                    st.success(summary)                    
+                    st.success(summary)
+                    
+            # Option to delete all uploaded files
+            if st.button("Delete Uploaded Files"):
+
+                folder = "uploaded_pdfs/"
+                for filename in os.listdir(folder):
+                    file_path = os.path.join(folder, filename)
+                    try:
+                        if os.path.isfile(file_path):
+                            os.unlink(file_path)
+                    except Exception as e:
+                        st.error(f"Error: {e}")                      
                     
     elif choice == "From Wikipedia Page URL":
         app_heading_html =  f"""

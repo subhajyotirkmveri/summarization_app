@@ -1,0 +1,45 @@
+## How to install Requirements :-
+
+1. Python3 can be installed from their official site https://www.python.org/ . Or you can use anaconda environment.
+2. Spacy can be installed by
+For Anaconda Environment > 
+```
+conda install -c conda-forge spacy
+
+python3 -m spacy download en
+```
+For other environments > 
+```
+pip3 install spacy
+
+python3 -m spacy download en
+```
+3. NLTK can be installed by
+For Anaconda Environment > 
+```
+conda install -c anaconda nltk
+```
+For other environments > 
+```
+pip3 install nltk
+```
+
+4. PyPdf2 can be installed by
+For Anaconda Environment > 
+```
+conda install -c conda-forge pypdf2
+```
+For other environments > 
+```
+pip3 install PyPDF2
+```
+
+5. Beautiful Soup (bs4)
+For Anaconda Environment > 
+```
+conda install -c anaconda beautifulsoup4
+```
+For other environments > 
+```
+pip3 install beautifulsoup4`
+```
