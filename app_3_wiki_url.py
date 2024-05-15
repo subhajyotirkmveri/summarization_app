@@ -30,6 +30,9 @@ def wiki_text(url):
     article_text = ""
     for p in paragraphs:
         article_text += p.text
+    
+    # Removing all unwanted characters
+    article_text = re.sub(r'\[[0-9]*\]', '', article_text)
     return article_text
 
 # Streamlit code
